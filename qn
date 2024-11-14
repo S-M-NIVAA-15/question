@@ -1,0 +1,140 @@
+2. k-means clustering
+import pandas as pd
+from sklearn.cluster import KMeans
+data = pd.read_csv('/content/data.csv')
+X = data[['Variable 1', 'Variable 2']]
+kmeans = KMeans(n_clusters=2, random_state=1)
+data['Cluster'] = kmeans.fit_predict(X)
+print(data)
+-----------------------------------------------
+7. k nearest neighbour
+import numpy as np
+import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+data = pd.read_csv('/content/data1.csv')
+X = data[['Height', 'Weight']].values
+y = data['Size'].values
+k = 3
+knn = KNeighborsClassifier(n_neighbors=k)
+knn.fit(X, y)
+new_customer = np.array([[172, 68]])
+predicted_size = knn.predict(new_customer)
+print(f"Predicted T-shirt size for the new customer: {predicted_size[0]}")
+-------------------------------------------------------------------
+
+3. linear regression
+
+x = [0, 1, 2, 3, 4]
+y = [2, 3, 5, 4, 6]
+N = len(x)
+sum_x = sum(x)
+sum_y = sum(y)
+sum_x_squared = sum([xi ** 2 for xi in x])
+sum_xy = sum([x[i] * y[i] for i in range(N)])
+a = (N * sum_xy - sum_x * sum_y) / (N * sum_x_squared - sum_x ** 2)
+b = (sum_y - a * sum_x) / N
+print(f"The regression line is: y = {a:.2f}x + {b:.2f}")
+x_new = 10
+y_estimated = a * x_new + b
+print(f"Estimated value of y when x = 10: {y_estimatejd:.2f}")
+y_pred = [a * xi + b for xi in x]
+mse = sum([(y_pred[i] - y[i]) ** 2 for i in range(N)]) / N
+print(f"Mean Squared Error: {mse:.2f}")
+-----------------------------------------------------------------------------------
+4.find s
+import pandas as pd
+data = pd.read_csv('/content/sfinds.csv')
+positive_examples = data[data['EnjoySport'] == 'Yes']
+hypothesis = positive_examples.iloc[0, :-1].values
+for i, row in positive_examples.iterrows():
+    for j in range(len(hypothesis)):
+        if hypothesis[j] != row[j]:  
+            hypothesis[j] = '?'
+print("Maximally Specific Hypothesis:", hypothesis)
+------------------------------------------------------------
+
+
+5.GMM
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.mixture import GaussianMixture
+iris = load_iris()
+X = iris.data
+gmm = GaussianMixture(n_components=3, random_state=0)
+gmm.fit(X)
+labels = gmm.predict(X)
+colors = ['red', 'green', 'yellow']
+
+plt.figure(figsize=(8, 6))
+for i, color in enumerate(colors):
+    plt.scatter(X[labels == i, 0], X[labels == i, 1], color=color, label=f'Cluster {i+1}')
+
+plt.xlabel(iris.feature_names[0])
+plt.ylabel(iris.feature_names[1])
+plt.title("Gaussian Mixture Model Clustering on Iris Dataset")
+plt.legend()
+plt.show()
+-----------------------------------------------------------
+6.SVM
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+X = np.array([
+    [1, 2],
+    [5, 8],
+    [1.5, 1.8],
+    [8, 8],
+    [1, 0.6],
+    [9, 11],
+    [7, 10],
+    [8.7, 9.4],
+    [2.3, 4],
+    [5.5, 3],
+    [7.7, 8.8],
+    [6.1, 7.5]
+])
+y = np.array([0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1])
+model = SVC(kernel='linear')
+model.fit(X, y)
+w = model.coef_[0]
+b = model.intercept_[0]
+slope = -w[0] / w[1]
+intercept = -b / w[1]
+x_vals = np.linspace(min(X[:, 0]), max(X[:, 0]), 100)
+y_vals = slope * x_vals + intercept
+margin = 1 / np.sqrt(np.sum(w**2))
+y_margin_up = y_vals + margin
+y_margin_down = y_vals - margin
+plt.figure(figsize=(8, 6))
+plt.scatter(X[:, 0], X[:, 1], c=y, cmap='coolwarm', s=50)
+plt.plot(x_vals, y_vals, 'k-', label="Optimal Hyperplane")
+plt.plot(x_vals, y_margin_up, 'g--', label="Margin")
+plt.plot(x_vals, y_margin_down, 'g--')
+plt.scatter(model.support_vectors_[:, 0], model.support_vectors_[:, 1],
+            s=100, facecolors='none', edgecolors='k', label="Support Vectors")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.title("SVM with Optimal Hyperplane and Margins")
+plt.show()
+--------------------------------------------------------------------
+1.DECISION TREE
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+data = pd.read_csv('weather_data.csv')
+label_encoder = LabelEncoder()
+for column in data.columns:
+    data[column] = label_encoder.fit_transform(data[column])
+X = data.drop('PlayTennis', axis=1)
+y = data['PlayTennis']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy * 100:.2f}%")
